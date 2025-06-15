@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <title>Add New Book</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link
+            href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+            rel="stylesheet"
+    />
+
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body style="background-color: var(--color-bg);">
+<div class="flex-center" style="padding: 2rem 1rem;">
+    <div class="card-wrapper" style="max-width: 600px;">
+        <h2 class="form-title">Add New Book</h2>
+
+        <form th:action="@{/admin/books/add}" th:object="${book}" method="post">
+            <div class="form-group">
+                <label th:text="#{label.title}">Title:</label>
+                <input
+                        type="text"
+                        th:field="*{title}"
+                        required
+                />
+                <div class="error"
+                     th:if="${#fields.hasErrors('title')}"
+                     th:errors="*{title}"></div>
+            </div>
+
+            <div class="form-group">
+                <label th:text="#{label.author}">Author:</label>
+                <select th:field="*{authorId}" required>
+                    <option value="" disabled>-- Select --</option>
+                    <option th:each="a : ${authors}"
+                            th:value="${a.id}"
+                            th:text="${a.name}"></option>
+                </select>
+                <div class="error"
+                     th:if="${#fields.hasErrors('authorId')}"
+                     th:errors="*{authorId}"></div>
+            </div>
+
+            <div class="form-group">
+                <label th:text="#{label.year}">Year:</label>
+                <input
+                        type="number"
+                        th:field="*{year}"
+                        min="0"
+                        required
+                />
+                <div class="error"
+                     th:if="${#fields.hasErrors('year')}"
+                     th:errors="*{year}"></div>
+            </div>
+
+            <div class="form-group">
+                <label th:text="#{label.description}">Description:</label>
+                <textarea
+                        th:field="*{description}"
+                        rows="4"
+                        required
+                ></textarea>
+                <div class="error"
+                     th:if="${#fields.hasErrors('description')}"
+                     th:errors="*{description}"></div>
+            </div>
+
+            <div class="form-group">
+                <label th:text="#{label.genres}">Genres:</label>
+                <select th:field="*{genreIds}" multiple size="5" required>
+                    <option th:each="g : ${genres}"
+                            th:value="${g.id}"
+                            th:text="${g.name}"></option>
+                </select>
+                <div class="error"
+                     th:if="${#fields.hasErrors('genreIds')}"
+                     th:errors="*{genreIds}"></div>
+            </div>
+
+            <div class="form-group">
+                <label th:text="#{label.quantity}">Quantity:</label>
+                <input
+                        type="number"
+                        th:field="*{quantity}"
+                        min="1"
+                        required
+                />
+                <div class="error"
+                     th:if="${#fields.hasErrors('quantity')}"
+                     th:errors="*{quantity}"></div>
+            </div>
+
+            <button type="submit" class="btn-primary" th:text="#{button.addBook}">
+                Add Book
+            </button>
+        </form>
+
+
+        <p style="text-align: center; margin-top: 1.5rem;">
+            <a th:href="@{/books}" class="btn-link">← Back to Book List</a>
+        </p>
+    </div>
+</div>
+</body>
+</html>

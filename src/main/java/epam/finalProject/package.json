@@ -1,0 +1,13 @@
+{
+  "name": "finalProject-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "devDependencies": {
+    "postcss": "^8.4.0",
+    "postcss-cli": "^9.1.0",
+    "autoprefixer": "^10.4.0"
+  },
+  "scripts": {
+    "build:css": "postcss src/main/resources/static/css/style.css -o target/classes/static/css/style.css"
+  }
+}

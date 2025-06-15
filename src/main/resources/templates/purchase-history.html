@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <title th:text="#{title.purchaseHistory}">Purchase History</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link
+            href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+            rel="stylesheet"
+    />
+
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div class="flex-center">
+    <div class="card-wrapper" style="max-width: 800px;">
+        <h2 class="form-title" th:text="#{heading.purchaseHistory}">Purchase History</h2>
+
+        <div th:if="${error}" class="error-text" style="margin-bottom: 1rem;">
+            <p th:text="${error}">Error occurred</p>
+        </div>
+
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th th:text="#{label.date}">Date</th>
+                    <th th:text="#{label.title}">Title</th>
+                    <th th:text="#{label.author}">Author</th>
+                    <th th:text="#{label.quantity}">Quantity</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="row : ${historyRows}">
+                    <td th:text="${#dates.format(row[2], 'dd-MM-yyyy HH:mm')}">
+                        01-06-2025 12:00
+                    </td>
+                    <td th:text="${(row[0]).title}">Book Title</td>
+                    <td th:text="${(row[0]).author.name}">Author Name</td>
+                    <td th:text="${row[1]}">1</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p style="text-align: center; margin-top: 1.5rem;">
+            <a th:href="@{/profile}" class="btn-link" th:text="#{link.backToProfile}">
+                ← Back to Profile
+            </a>
+        </p>
+
+        <p style="text-align: center; margin-top: 0.5rem;">
+            <a th:href="@{/purchase-history(lang='en')}">EN</a> |
+            <a th:href="@{/purchase-history(lang='ru')}">RU</a>
+        </p>
+    </div>
+</div>
+</body>
+</html>
