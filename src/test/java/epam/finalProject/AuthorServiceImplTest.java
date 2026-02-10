@@ -35,7 +35,7 @@ class AuthorServiceImplTest {
         boolean result = authorService.save(a);
 
         assertTrue(result);
-        verify(authorDao, times(1)).save(a);
+        verify(authorDao).save(a);
     }
 
     @Test

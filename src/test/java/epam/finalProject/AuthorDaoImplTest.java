@@ -5,6 +5,8 @@ import epam.finalProject.entity.Author;
 import org.h2.tools.RunScript;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import java.io.InputStreamReader;
@@ -46,14 +48,13 @@ public class AuthorDaoImplTest {
         assertNull(dao.findById(999L));
     }
 
-    @Test
-    void existsById_existing_shouldReturnTrue() {
-        assertTrue(dao.existsById(1L));
-    }
-
-    @Test
-    void existsById_missing_shouldReturnFalse() {
-        assertFalse(dao.existsById(999L));
+    @ParameterizedTest
+    @CsvSource({
+            "1, true",
+            "999, false"
+    })
+    void existsById_shouldReturnExpected(long id, boolean expected) {
+        assertEquals(expected, dao.existsById(id));
     }
 
     @Test

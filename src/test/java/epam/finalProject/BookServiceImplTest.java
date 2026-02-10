@@ -6,6 +6,8 @@ import epam.finalProject.entity.Book;
 import epam.finalProject.service.BookServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,43 +33,26 @@ class BookServiceImplTest {
     }
 
 
-    @Test
-    void deleteBook_ShouldReturnTrue_WhenDaoReturnsTrue() {
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void deleteBook_ShouldReturnDaoResult(boolean daoResult) {
         Book book = new Book();
-        when(bookDao.deleteBook(book)).thenReturn(true);
+        when(bookDao.deleteBook(book)).thenReturn(daoResult);
 
         boolean result = service.deleteBook(book);
-        assertTrue(result);
+
+        assertEquals(daoResult, result);
         verify(bookDao).deleteBook(book);
     }
 
-    @Test
-    void deleteBook_ShouldReturnFalse_WhenDaoReturnsFalse() {
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void changeBook_ShouldReturnDaoResult(boolean daoResult){
         Book book = new Book();
-        when(bookDao.deleteBook(book)).thenReturn(false);
-
-        boolean result = service.deleteBook(book);
-        assertFalse(result);
-        verify(bookDao).deleteBook(book);
-    }
-
-    @Test
-    void changeBook_ShouldReturnTrue_WhenDaoReturnsTrue() {
-        Book book = new Book();
-        when(bookDao.changeBook(book)).thenReturn(true);
+        when(bookDao.changeBook(book)).thenReturn(daoResult);
 
         boolean result = service.changeBook(book);
-        assertTrue(result);
-        verify(bookDao).changeBook(book);
-    }
-
-    @Test
-    void changeBook_ShouldReturnFalse_WhenDaoReturnsFalse() {
-        Book book = new Book();
-        when(bookDao.changeBook(book)).thenReturn(false);
-
-        boolean result = service.changeBook(book);
-        assertFalse(result);
+        assertEquals(daoResult, result);
         verify(bookDao).changeBook(book);
     }
 
@@ -91,27 +76,16 @@ class BookServiceImplTest {
         verify(bookDao).findById(42L);
     }
 
-    @Test
-    void saveBookWithAuthor_ShouldReturnTrue_WhenDaoReturnsTrue() {
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void saveBookWithAuthor_ShouldReturnDaoResult(boolean daoResult) {
         Book book = new Book();
         Author author = new Author();
-        when(bookDao.saveBookWithAuthor(book, author)).thenReturn(true);
+        when(bookDao.saveBookWithAuthor(book, author)).thenReturn(daoResult);
 
-        boolean ok = service.saveBookWithAuthor(book, author);
-        assertTrue(ok);
+        boolean result = service.saveBookWithAuthor(book, author);
+        assertEquals(daoResult, result);
         verify(bookDao).saveBookWithAuthor(book, author);
     }
-
-    @Test
-    void saveBookWithAuthor_ShouldReturnFalse_WhenDaoReturnsFalse() {
-        Book book = new Book();
-        Author author = new Author();
-        when(bookDao.saveBookWithAuthor(book, author)).thenReturn(false);
-
-        boolean ok = service.saveBookWithAuthor(book, author);
-        assertFalse(ok);
-        verify(bookDao).saveBookWithAuthor(book, author);
-    }
-
 
 }

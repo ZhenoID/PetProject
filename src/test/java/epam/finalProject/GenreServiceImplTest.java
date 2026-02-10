@@ -5,6 +5,8 @@ import epam.finalProject.entity.Genre;
 import epam.finalProject.service.GenreServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.*;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -29,27 +31,14 @@ class GenreServiceImplTest {
         ReflectionTestUtils.setField(service, "genreDao", genreDao);
     }
 
-    @Test
-    void save_ShouldReturnTrue_WhenDaoReturnsTrue() {
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void save_ShouldReturnDaoResult(boolean daoResult) {
         Genre g = new Genre();
-        g.setName("Sci-Fi");
-        when(genreDao.save(g)).thenReturn(true);
+        g.setName("Any");
+        when(genreDao.save(g)).thenReturn(daoResult);
 
-        boolean ok = service.save(g);
-
-        assertTrue(ok);
-        verify(genreDao).save(g);
-    }
-
-    @Test
-    void save_ShouldReturnFalse_WhenDaoReturnsFalse() {
-        Genre g = new Genre();
-        g.setName("Mystery");
-        when(genreDao.save(g)).thenReturn(false);
-
-        boolean ok = service.save(g);
-
-        assertFalse(ok);
+        assertEquals(daoResult, service.save(g));
         verify(genreDao).save(g);
     }
 
@@ -66,8 +55,7 @@ class GenreServiceImplTest {
 
         List<Genre> result = service.findAll();
 
-        assertSame(list, result);
-        assertEquals(2, result.size());
+        assertEquals(list, result);
         verify(genreDao).findAll();
     }
 
