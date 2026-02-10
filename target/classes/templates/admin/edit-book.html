@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="ru">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <title th:text="#{title.editBook}">Edit Book</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link
+            href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+            rel="stylesheet"
+    />
+
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body style="background-color: var(--color-bg);">
+<div class="flex-center" style="min-height: 100vh;">
+    <div class="card-wrapper" style="max-width: 600px;">
+        <h2 class="form-title" th:text="#{heading.editBook}">Edit Book</h2>
+
+        <div style="text-align: right; margin-bottom: 1rem;">
+            <button type="button"
+                    class="btn-lang"
+                    th:onclick="|window.location='@{/admin/books/edit/{id}(id=${book.id},lang='en')}'|">
+                EN
+            </button>
+            <button type="button"
+                    class="btn-lang"
+                    th:onclick="|window.location='@{/admin/books/edit/{id}(id=${book.id},lang='ru')}'|">
+                RU
+            </button>
+        </div>
+
+        <form th:action="@{/admin/books/edit}" th:object="${book}" method="post">
+            <input type="hidden" th:field="*{id}"/>
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+            <div class="form-group">
+                <label th:text="#{label.title}">Title:</label>
+                <input type="text" th:field="*{title}" required/>
+            </div>
+
+            <div class="form-group">
+                <label th:text="#{label.author}">Author:</label>
+                <select th:field="*{authorId}" required
+                        style="padding:0.75rem 1rem; border:1px solid var(--color-border); border-radius:var(--radius-sm);">
+                    <option value="" disabled>-- Select Author --</option>
+                    <option th:each="a : ${authors}"
+                            th:value="${a.id}"
+                            th:text="${a.name}">
+                    </option>
+                </select>
+                <a th:href="@{/admin/authors/add}" class="btn-link">➕</a>
+            </div>
+
+            <div class="form-group">
+                <label th:text="#{label.genre}">Genres:</label>
+                <select th:field="*{genreIds}" multiple size="5"
+                        style="padding:0.75rem 1rem; border:1px solid var(--color-border); border-radius:var(--radius-sm);">
+                    <option th:each="g : ${genres}"
+                            th:value="${g.id}"
+                            th:text="${g.name}">
+                    </option>
+                </select>
+                <a th:href="@{/admin/genres/add}" class="btn-link">➕</a>
+            </div>
+
+            <div class="form-group">
+                <label th:text="#{label.year}">Year:</label>
+                <input type="number" th:field="*{year}" min="0" required/>
+            </div>
+
+            <div class="form-group">
+                <label th:text="#{label.quantity}">Quantity:</label>
+                <input type="number" th:field="*{quantity}" min="0" required/>
+            </div>
+
+            <div class="form-group">
+                <label th:text="#{label.description}">Description:</label>
+                <textarea th:field="*{description}" rows="4" cols="40"></textarea>
+            </div>
+
+            <div class="form-group" style="margin-top:1rem;">
+                <button type="submit" class="btn-warning" th:text="#{button.save}">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+
+        <div th:if="${error}" class="error-text" style="margin-top:1rem;">
+            <p th:text="${error}"></p>
+        </div>
+
+        <br/>
+        <a th:href="@{/books}" class="btn-link" th:text="#{link.backToList}">
+            ← Back to Book List
+        </a>
+    </div>
+</div>
+</body>
+</html>

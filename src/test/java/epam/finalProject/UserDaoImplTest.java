@@ -1,14 +1,16 @@
+// UserDaoImplTest.java
 package epam.finalProject;
 
 import epam.finalProject.DAO.UserDaoImpl;
 import epam.finalProject.entity.User;
 import org.h2.jdbcx.JdbcDataSource;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.Statement;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,24 +19,25 @@ class UserDaoImplTest {
 
     private DataSource ds;
     private UserDaoImpl dao;
+    private final String dbName = "userDb_" + System.nanoTime();
 
     @BeforeAll
     void initDatabase() throws Exception {
         JdbcDataSource h2 = new JdbcDataSource();
-        h2.setURL("jdbc:h2:mem:userDb;DB_CLOSE_DELAY=-1");
+        h2.setURL("jdbc:h2:mem:" + dbName + ";DB_CLOSE_DELAY=-1");
         h2.setUser("sa");
         h2.setPassword("");
         ds = h2;
 
         try (Connection conn = ds.getConnection(); Statement stmt = conn.createStatement()) {
             stmt.execute("""
-                        CREATE TABLE users (
-                          id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                          username VARCHAR(255) UNIQUE NOT NULL,
-                          password VARCHAR(255) NOT NULL,
-                          role VARCHAR(50) NOT NULL
-                        );
-                    """);
+                CREATE TABLE users (
+                  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                  username VARCHAR(255) UNIQUE NOT NULL,
+                  password VARCHAR(255) NOT NULL,
+                  role VARCHAR(50) NOT NULL
+                );
+            """);
         }
     }
 
@@ -71,5 +74,24 @@ class UserDaoImplTest {
         assertNull(dao.findByUsername("no_such_user"));
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"ROLE_USER", "ROLE_ADMIN", "ROLE_MANAGER"})
+    void updateRole_existingUser_shouldUpdateRole(String newRole) {
+        User u = new User();
+        u.setUsername("bob");
+        u.setPassword("pass");
+        u.setRole("ROLE_USER");
 
+        assertTrue(dao.save(u));
+        assertNotNull(u.getId());
+        assertTrue(u.getId() > 0);
+
+        assertTrue(dao.updateRole(u.getId(), newRole));
+
+        User fromDb = dao.findById(u.getId());
+        assertNotNull(fromDb);
+        assertEquals(u.getId(), fromDb.getId());
+        assertEquals("bob", fromDb.getUsername());
+        assertEquals(newRole, fromDb.getRole());
+    }
 }
