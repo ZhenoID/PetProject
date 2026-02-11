@@ -38,15 +38,6 @@ CREATE TABLE book_genres (
 );
 
 
-
--- RATINGS
-CREATE TABLE ratings (
-    id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES users(id) ON DELETE CASCADE,
-    book_id INT REFERENCES books(id) ON DELETE CASCADE,
-    score INT CHECK (score >= 1 AND score <= 5)
-);
-
 --BASKET
 CREATE TABLE basket_items (
   id SERIAL PRIMARY KEY,
