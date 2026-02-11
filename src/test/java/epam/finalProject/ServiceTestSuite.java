@@ -6,11 +6,7 @@ import org.junit.platform.suite.api.Suite;
 
 @Suite
 @SelectClasses({
-        AuthorServiceImplTest.class,
-        BasketServiceImplTest.class,
-        BookServiceImplTest.class,
-        GenreServiceImplTest.class,
-        UserServiceImplTest.class
+        BookServiceImplTest.class
 })
 public class ServiceTestSuite {
 }

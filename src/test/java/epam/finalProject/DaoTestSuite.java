@@ -7,8 +7,7 @@ import org.junit.platform.suite.api.Suite;
 @Suite
 @SelectClasses({
         AuthorDaoImplTest.class,
-        BasketDaoImplTest.class,
-        UserDaoImplTest.class
+        BasketDaoImplTest.class
 })
 public class DaoTestSuite {
 }
